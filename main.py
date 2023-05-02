@@ -1,14 +1,16 @@
 from fastapi import FastAPI, BackgroundTasks, HTTPException
 from pydantic import BaseModel
 from extract import *
+from telegram import TelegramBot
+from datetime import datetime
 import os
-
+import time
 
 SECRET = os.getenv("SECRET")
 
 #
 app = FastAPI()
-
+tg = TelegramBot()
 class Msg(BaseModel):
     msg: str
     secret: str
@@ -26,7 +28,14 @@ async def demo_get():
     print('obtendo retorno')
     homepage = getGoogleHomepage(driver)
     driver.close()
+    tg.send_message(f'{datetime.now()}')
     return homepage
+
+@app.get('/run')
+def get_run():
+    while True:
+        tg.send_message(f'{datetime.now()}')
+        time.sleep(5)
 
 @app.post("/backgroundDemo")
 async def demo_post(inp: Msg, background_tasks: BackgroundTasks):
