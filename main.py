@@ -21,8 +21,9 @@ async def root():
 
 @app.get("/homepage")
 async def demo_get():
+    print('abrindo navegador')
     driver=createDriver()
-
+    print('obtendo retorno')
     homepage = getGoogleHomepage(driver)
     driver.close()
     return homepage
